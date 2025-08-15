@@ -19,14 +19,23 @@
 
     <properties>
         <java.version>21</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
         <spring-boot-starter.version>3.5.4</spring-boot-starter.version>
         <postgresql.version>42.7.7</postgresql.version>
+        <lombok.version>1.18.38</lombok.version>
+        <irisinfinity-common.version>0.0.1-SNAPSHOT</irisinfinity-common.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
+            <version>${spring-boot-starter.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
             <version>${spring-boot-starter.version}</version>
         </dependency>
         <dependency>
@@ -49,6 +58,16 @@
             <artifactId>postgresql</artifactId>
             <version>${postgresql.version}</version>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ro.irisinfinity</groupId>
+            <artifactId>irisinfinity-common</artifactId>
+            <version>${irisinfinity-common.version}</version>
         </dependency>
         <!-- Testing -->
         <dependency>

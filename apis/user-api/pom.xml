@@ -11,7 +11,7 @@
 
     <artifactId>user-api</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>user-api</name>
-    <description>user-api</description>
+    <name>irisinfinity-user-api</name>
+    <description>irisinfinity-user-api</description>
 
 </project>
