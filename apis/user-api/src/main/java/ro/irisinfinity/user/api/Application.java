@@ -1,13 +1,12 @@
-package ro.irisinfinity.backend;
+package ro.irisinfinity.user.api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class IrisinfinityBackendApplication {
+public class Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(IrisinfinityBackendApplication.class, args);
+        SpringApplication.run(Application.class, args);
     }
-
 }
