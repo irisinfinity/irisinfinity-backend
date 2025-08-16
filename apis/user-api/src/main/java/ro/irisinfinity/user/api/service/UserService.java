@@ -1,12 +1,13 @@
 package ro.irisinfinity.user.api.service;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ro.irisinfinity.common.dto.user.UserRequestDto;
 import ro.irisinfinity.common.dto.user.UserResponseDto;
@@ -23,14 +24,12 @@ public class UserService {
     private UserRepository userRepository;
     private ObjectMapper objectMapper;
 
-    public List<UserResponseDto> getUsers() {
-        List<User> userList = userRepository.findAll();
+    public Page<UserResponseDto> getUsers(int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
 
-        return objectMapper.convertValue(
-            userList,
-            new TypeReference<List<UserResponseDto>>() {
-            }
-        );
+        Page<User> userPage = userRepository.findAll(pageable);
+
+        return userPage.map(user -> objectMapper.convertValue(user, UserResponseDto.class));
     }
 
     public UserResponseDto getUser(UUID externalId) {

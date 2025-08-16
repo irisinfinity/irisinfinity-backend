@@ -1,6 +1,7 @@
 package ro.irisinfinity.common.dto.user;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 import ro.irisinfinity.common.enums.Sex;
 
@@ -10,7 +11,8 @@ public record UserResponseDto(
     String firstName,
     String lastName,
     LocalDate birthDate,
-    Sex sex
+    Sex sex,
+    LocalDateTime createdAt
 ) {
- 
+
 }

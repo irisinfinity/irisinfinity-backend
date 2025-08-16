@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -18,6 +19,7 @@ import ro.irisinfinity.common.dto.error.ErrorResponse;
 import ro.irisinfinity.common.exception.AlreadyExistsException;
 import ro.irisinfinity.common.exception.NotFoundException;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -54,7 +56,7 @@ public class GlobalExceptionHandler {
             ex.getValue(),
             ex.getName(),
             Objects.requireNonNull(ex.getRequiredType()).getSimpleName());
-        
+
         return buildErrorResponse(HttpStatus.BAD_REQUEST, error, request.getRequestURI());
     }
 
@@ -83,6 +85,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleOtherExceptions(Exception ex, HttpServletRequest request) {
+        log.error(ex.getMessage(), ex.getCause());
+        
         return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred",
             request.getRequestURI());
     }

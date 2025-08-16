@@ -7,9 +7,9 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,7 +28,7 @@ public class User {
     Long id;
 
     @Column(nullable = false, unique = true, updatable = false)
-    UUID externalId;
+    UUID externalId = UUID.randomUUID();
 
     @Column(nullable = false, unique = true, length = 100)
     String email;
@@ -49,10 +49,6 @@ public class User {
     @Column(nullable = false, length = 10)
     Sex sex;
 
-    @PrePersist
-    public void prePersist() {
-        if (externalId == null) {
-            externalId = UUID.randomUUID();
-        }
-    }
+    @Column(nullable = false)
+    LocalDateTime createdAt = LocalDateTime.now();
 }
