@@ -16,7 +16,6 @@
         <spring-boot-starter.version>3.5.4</spring-boot-starter.version>
         <lombok.version>1.18.38</lombok.version>
         <jackson-databind.version>2.19.2</jackson-databind.version>
-        <sl4fj-api.version>2.0.17</sl4fj-api.version>
     </properties>
 
     <dependencies>
@@ -39,11 +38,6 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>${jackson-databind.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${sl4fj-api.version}</version>
         </dependency>
     </dependencies>
 </project>

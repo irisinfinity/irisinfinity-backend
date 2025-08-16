@@ -51,7 +51,7 @@ public class UserService {
         User user = objectMapper.convertValue(userRequestDto, User.class);
         User savedUser = userRepository.save(user);
 
-        log.info("User created successfully: id={}", savedUser.getId());
+        log.info("User created successfully: email={}", savedUser.getEmail());
         return objectMapper.convertValue(savedUser, UserResponseDto.class);
     }
 

@@ -71,11 +71,6 @@
             <artifactId>irisinfinity-common</artifactId>
             <version>${irisinfinity-common.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${sl4fj-api.version}</version>
-        </dependency>
         <!-- Testing -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
