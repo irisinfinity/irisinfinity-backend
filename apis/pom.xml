@@ -25,6 +25,7 @@
         <postgresql.version>42.7.7</postgresql.version>
         <lombok.version>1.18.38</lombok.version>
         <irisinfinity-common.version>0.0.1-SNAPSHOT</irisinfinity-common.version>
+        <sl4fj-api.version>2.0.17</sl4fj-api.version>
     </properties>
 
     <dependencies>
@@ -68,6 +69,11 @@
             <groupId>ro.irisinfinity</groupId>
             <artifactId>irisinfinity-common</artifactId>
             <version>${irisinfinity-common.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${sl4fj-api.version}</version>
         </dependency>
         <!-- Testing -->
         <dependency>
