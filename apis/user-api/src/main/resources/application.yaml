@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: user-api
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/user_db
+    username: admin
+    password: admin
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+server:
+  tomcat:
+    basedir: logs/${spring.application.name}
+    accesslog:
+      enabled: true
+      directory: .
+      pattern: '%h %l %u %t "%r" %s %b %D'
