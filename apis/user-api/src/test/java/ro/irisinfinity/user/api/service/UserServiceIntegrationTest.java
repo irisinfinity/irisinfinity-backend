@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import ro.irisinfinity.common.dto.user.UserRequestDto;
 import ro.irisinfinity.common.dto.user.UserResponseDto;
@@ -15,6 +16,7 @@ import ro.irisinfinity.user.api.repository.UserRepository;
 
 @SpringBootTest
 @Transactional
+@ActiveProfiles("test")
 class UserServiceIntegrationTest {
 
     @Autowired
