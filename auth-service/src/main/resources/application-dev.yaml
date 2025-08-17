@@ -1,7 +1,20 @@
 spring:
   application:
     name: auth-service
-
+  cloud:
+    openfeign:
+      client:
+        config:
+          users-service:
+            connect-timeout: 2000
+            read-timeout: 5000
+            logger-level: basic
+      compression:
+        request:
+          enabled: true
+        response:
+          enabled: true
+          
 server:
   port: 8081
   tomcat:
@@ -26,3 +39,7 @@ management:
   endpoint:
     health:
       show-details: always # when_authorized
+
+jwt:
+  secret: supersecretkeysupersecretkeysupersecretkey123
+  expiration: 3600000

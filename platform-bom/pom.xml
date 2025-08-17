@@ -20,6 +20,7 @@
     <spring.boot.version>3.5.4</spring.boot.version>
     <spring.cloud.version>2025.0.0</spring.cloud.version>
     <lombok.version>1.18.38</lombok.version>
+    <jjwt.version>0.12.7</jjwt.version>
     <irisinfinity.paltform.version>0.0.1-SNAPSHOT</irisinfinity.paltform.version>
   </properties>
 

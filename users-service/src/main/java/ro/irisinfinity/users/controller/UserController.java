@@ -28,8 +28,8 @@ public class UserController {
 
     @GetMapping
     public Page<UserResponseDto> getUsers(
-        @RequestParam(defaultValue = "0") int pageNumber,
-        @RequestParam(defaultValue = "20") int pageSize
+        @RequestParam(name = "page-number", defaultValue = "0") int pageNumber,
+        @RequestParam(name = "page-size", defaultValue = "20") int pageSize
     ) {
         return userService.getUsers(pageNumber, pageSize);
     }
