@@ -18,13 +18,18 @@ public class AuthService {
     private final UsersClient usersClient;
     private final PasswordEncoder passwordEncoder;
     private final ObjectMapper objectMapper;
+    private final JwtService jwtService;
 
-    public void auth(final CredentialsRequestDto credentialsRequestDto) {
+    public String generateToken(final CredentialsRequestDto credentialsRequestDto) {
         EmailLookupRequestDto emailLookupRequestDto = objectMapper.convertValue(
             credentialsRequestDto, EmailLookupRequestDto.class);
 
         CredentialsResponseDto credentialsResponseDto = usersClient.findCredentials(
             emailLookupRequestDto);
+
+        String email = credentialsResponseDto.email();
+
+        return jwtService.generateToken(email);
     }
 
     public UserResponseDto registerUser(final UserRequestDto userRequestDto) {

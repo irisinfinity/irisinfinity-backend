@@ -18,13 +18,14 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @PostMapping
-    public void auth(@RequestBody @Valid final CredentialsRequestDto credentialsRequestDto) {
-        authService.auth(credentialsRequestDto);
-    }
-
     @PostMapping("/register")
     public UserResponseDto registerUser(@RequestBody @Valid final UserRequestDto userRequestDto) {
         return authService.registerUser(userRequestDto);
+    }
+
+    @PostMapping("/token")
+    public String generateToken(
+        @RequestBody @Valid final CredentialsRequestDto credentialsRequestDto) {
+        return authService.generateToken(credentialsRequestDto);
     }
 }

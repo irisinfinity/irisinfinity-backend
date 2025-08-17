@@ -8,6 +8,7 @@
     <groupId>ro.irisinfinity</groupId>
     <artifactId>platform-bom</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <relativePath>../platform-bom/pom.xml</relativePath>
   </parent>
 
   <artifactId>registry-service</artifactId>

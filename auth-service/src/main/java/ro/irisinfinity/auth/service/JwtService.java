@@ -22,11 +22,11 @@ public class JwtService {
         return Keys.hmacShaKeyFor(jwtProperties.getSecret().getBytes());
     }
 
-    public String generateToken(String username) {
+    public String generateToken(final String username) {
         return generateToken(username, Map.of());
     }
 
-    public String generateToken(String username, Map<String, Object> extraClaims) {
+    public String generateToken(final String username, final Map<String, Object> extraClaims) {
         return Jwts.builder()
             .claims(extraClaims)
             .subject(username)
@@ -36,17 +36,13 @@ public class JwtService {
             .compact();
     }
 
-    public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
-    }
-
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+    public <T> T extractClaim(final String token, final Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
 
         return claimsResolver.apply(claims);
     }
 
-    private Claims extractAllClaims(String token) {
+    private Claims extractAllClaims(final String token) {
         return Jwts.parser()
             .verifyWith(getSigningKey())
             .build()
@@ -54,17 +50,25 @@ public class JwtService {
             .getPayload();
     }
 
-    public boolean isTokenValid(String token, String username) {
+    public boolean isTokenValid(final String token) {
+        return !isTokenExpired(token);
+    }
+
+    public boolean isTokenValid(final String token, final String username) {
         final String extractedUsername = extractUsername(token);
 
         return (extractedUsername.equals(username)) && !isTokenExpired(token);
     }
 
-    private boolean isTokenExpired(String token) {
+    public String extractUsername(final String token) {
+        return extractClaim(token, Claims::getSubject);
+    }
+
+    private boolean isTokenExpired(final String token) {
         return extractExpiration(token).before(new Date());
     }
 
-    private Date extractExpiration(String token) {
+    private Date extractExpiration(final String token) {
         return extractClaim(token, Claims::getExpiration);
     }
 }
