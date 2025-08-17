@@ -12,7 +12,8 @@ public record UserResponseDto(
     String lastName,
     LocalDate birthDate,
     Sex sex,
-    LocalDateTime createdAt
+    LocalDateTime createdAt,
+    Boolean enabled
 ) {
 
 }

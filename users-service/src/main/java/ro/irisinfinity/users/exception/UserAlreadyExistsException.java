@@ -8,7 +8,7 @@ public class UserAlreadyExistsException extends AlreadyExistsException {
         super("User already exists");
     }
 
-    public UserAlreadyExistsException(String message) {
+    public UserAlreadyExistsException(final String message) {
         super(message);
     }
 }

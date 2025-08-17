@@ -26,15 +26,15 @@ import ro.irisinfinity.platform.common.enums.Sex;
 import ro.irisinfinity.users.entity.User;
 import ro.irisinfinity.users.exception.UserAlreadyExistsException;
 import ro.irisinfinity.users.exception.UserNotFoundException;
-import ro.irisinfinity.users.repository.UserRepository;
+import ro.irisinfinity.users.repository.UsersRepository;
 
-class UserServiceUnitTest {
+class UsersServiceUnitTest {
 
     @InjectMocks
-    private UserService userService;
+    private UsersService usersService;
 
     @Mock
-    private UserRepository userRepository;
+    private UsersRepository usersRepository;
 
     @Mock
     private ObjectMapper objectMapper;
@@ -56,6 +56,7 @@ class UserServiceUnitTest {
         var userBirthDate = LocalDate.of(2000, 1, 1);
         var userSex = Sex.MALE;
         var userCreatedAt = LocalDateTime.now();
+        var userEnabled = true;
 
         user = new User();
         user.setId(userId);
@@ -84,20 +85,21 @@ class UserServiceUnitTest {
             userLastName,
             userBirthDate,
             userSex,
-            userCreatedAt
+            userCreatedAt,
+            userEnabled
         );
     }
 
     @Test
     @DisplayName("getUsers should return a page of mapped UserResponseDto objects")
-    void getUsers_shouldReturnMappedPage() {
+    void getUsers_shouldReturnMappedPageByExternalId() {
         Pageable pageable = PageRequest.of(0, 20);
         Page<User> page = new PageImpl<>(List.of(user));
 
-        when(userRepository.findAll(pageable)).thenReturn(page);
+        when(usersRepository.findAll(pageable)).thenReturn(page);
         when(objectMapper.convertValue(user, UserResponseDto.class)).thenReturn(userResponseDto);
 
-        Page<UserResponseDto> result = userService.getUsers(0, 20);
+        Page<UserResponseDto> result = usersService.getUsers(0, 20);
 
         assertEquals(1, result.getContent().size());
         assertEquals(userResponseDto, result.getContent().getFirst());
@@ -105,41 +107,41 @@ class UserServiceUnitTest {
 
     @Test
     @DisplayName("getUser should return UserResponseDto when user exists")
-    void getUser_existingUser_shouldReturnDto() {
-        when(userRepository.findUserByExternalId(user.getExternalId())).thenReturn(
+    void getUser_existingUser_ByExternalId_shouldReturnDto() {
+        when(usersRepository.findUserByExternalId(user.getExternalId())).thenReturn(
             Optional.of(user));
         when(objectMapper.convertValue(user, UserResponseDto.class)).thenReturn(userResponseDto);
 
-        UserResponseDto result = userService.getUser(user.getExternalId());
+        UserResponseDto result = usersService.getUserByExternalId(user.getExternalId());
         assertEquals(userResponseDto, result);
     }
 
     @Test
     @DisplayName("getUser should throw UserNotFoundException when user does not exist")
-    void getUser_nonExistingUser_shouldThrow() {
+    void getUser_nonExistingUser_ByExternalId_shouldThrow() {
         UUID randomId = UUID.randomUUID();
-        when(userRepository.findUserByExternalId(randomId)).thenReturn(Optional.empty());
+        when(usersRepository.findUserByExternalId(randomId)).thenReturn(Optional.empty());
 
-        assertThrows(UserNotFoundException.class, () -> userService.getUser(randomId));
+        assertThrows(UserNotFoundException.class, () -> usersService.getUserByExternalId(randomId));
     }
 
     @Test
     @DisplayName("createUser should throw UserAlreadyExistsException when email already exists")
     void createUser_emailExists_shouldThrow() {
-        when(userRepository.existsUserByEmail(userRequestDto.email())).thenReturn(true);
+        when(usersRepository.existsUserByEmail(userRequestDto.email())).thenReturn(true);
         assertThrows(UserAlreadyExistsException.class,
-            () -> userService.createUser(userRequestDto));
+            () -> usersService.createUser(userRequestDto));
     }
 
     @Test
     @DisplayName("createUser should successfully create and return UserResponseDto")
     void createUser_success_shouldReturnDto() {
-        when(userRepository.existsUserByEmail(userRequestDto.email())).thenReturn(false);
+        when(usersRepository.existsUserByEmail(userRequestDto.email())).thenReturn(false);
         when(objectMapper.convertValue(userRequestDto, User.class)).thenReturn(user);
-        when(userRepository.save(user)).thenReturn(user);
+        when(usersRepository.save(user)).thenReturn(user);
         when(objectMapper.convertValue(user, UserResponseDto.class)).thenReturn(userResponseDto);
 
-        UserResponseDto result = userService.createUser(userRequestDto);
+        UserResponseDto result = usersService.createUser(userRequestDto);
         assertEquals(userResponseDto, result);
     }
 
@@ -147,35 +149,35 @@ class UserServiceUnitTest {
     @DisplayName("updateUser should throw UserNotFoundException when user does not exist")
     void updateUser_nonExisting_shouldThrow() {
         UUID randomId = UUID.randomUUID();
-        when(userRepository.findUserByExternalId(randomId)).thenReturn(Optional.empty());
+        when(usersRepository.findUserByExternalId(randomId)).thenReturn(Optional.empty());
 
         assertThrows(UserNotFoundException.class,
-            () -> userService.updateUser(randomId, userRequestDto));
+            () -> usersService.updateUser(randomId, userRequestDto));
     }
 
     @Test
     @DisplayName("updateUser should throw UserAlreadyExistsException when email already exists")
     void updateUser_emailExists_shouldThrow() {
         var userUpdatedEmail = "updated@test.com";
-        
-        when(userRepository.findUserByExternalId(user.getExternalId()))
+
+        when(usersRepository.findUserByExternalId(user.getExternalId()))
             .thenReturn(Optional.of(user));
-        when(userRepository.existsUserByEmail(userUpdatedEmail)).thenReturn(true);
+        when(usersRepository.existsUserByEmail(userUpdatedEmail)).thenReturn(true);
 
         var userUpdateDto = new UserRequestDto(userUpdatedEmail, user.getPassword(),
             user.getFirstName(), user.getLastName(), user.getBirthDate(), user.getSex()
         );
 
         assertThrows(UserAlreadyExistsException.class,
-            () -> userService.updateUser(user.getExternalId(), userUpdateDto));
+            () -> usersService.updateUser(user.getExternalId(), userUpdateDto));
     }
 
     @Test
     @DisplayName("deleteUser should throw UserNotFoundException when user does not exist")
     void deleteUser_nonExisting_shouldThrow() {
         UUID randomId = UUID.randomUUID();
-        when(userRepository.findUserByExternalId(randomId)).thenReturn(Optional.empty());
+        when(usersRepository.findUserByExternalId(randomId)).thenReturn(Optional.empty());
 
-        assertThrows(UserNotFoundException.class, () -> userService.deleteUser(randomId));
+        assertThrows(UserNotFoundException.class, () -> usersService.deleteUser(randomId));
     }
 }

@@ -17,44 +17,44 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ro.irisinfinity.platform.common.dto.user.UserRequestDto;
 import ro.irisinfinity.platform.common.dto.user.UserResponseDto;
-import ro.irisinfinity.users.service.UserService;
+import ro.irisinfinity.users.service.UsersService;
 
 @RestController
 @RequestMapping("/api/v1/users")
 @AllArgsConstructor
-public class UserController {
+public class UsersController {
 
-    private final UserService userService;
+    private final UsersService usersService;
 
     @GetMapping
     public Page<UserResponseDto> getUsers(
-        @RequestParam(name = "page-number", defaultValue = "0") int pageNumber,
-        @RequestParam(name = "page-size", defaultValue = "20") int pageSize
+        @RequestParam(name = "page-number", defaultValue = "0") final int pageNumber,
+        @RequestParam(name = "page-size", defaultValue = "20") final int pageSize
     ) {
-        return userService.getUsers(pageNumber, pageSize);
+        return usersService.getUsers(pageNumber, pageSize);
     }
 
     @GetMapping("/{externalId}")
-    public UserResponseDto getUser(@PathVariable UUID externalId) {
-        return userService.getUser(externalId);
+    public UserResponseDto getUserByExternalId(@PathVariable("externalId") final UUID externalId) {
+        return usersService.getUserByExternalId(externalId);
     }
 
     @PostMapping
-    public UserResponseDto createUser(@RequestBody @Valid UserRequestDto userRequestDto) {
-        return userService.createUser(userRequestDto);
+    public UserResponseDto createUser(@RequestBody @Valid final UserRequestDto userRequestDto) {
+        return usersService.createUser(userRequestDto);
     }
 
     @PutMapping("/{externalId}")
     public UserResponseDto updateUser(
-        @PathVariable UUID externalId,
-        @RequestBody @Valid UserRequestDto userRequestDto
+        @PathVariable("externalId") final UUID externalId,
+        @RequestBody @Valid final UserRequestDto userRequestDto
     ) {
-        return userService.updateUser(externalId, userRequestDto);
+        return usersService.updateUser(externalId, userRequestDto);
     }
 
     @DeleteMapping("/{externalId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(@PathVariable UUID externalId) {
-        userService.deleteUser(externalId);
+    public void deleteUser(@PathVariable("externalId") final UUID externalId) {
+        usersService.deleteUser(externalId);
     }
 }

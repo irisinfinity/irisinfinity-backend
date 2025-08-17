@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>ro.irisinfinity</groupId>
+  <artifactId>irisinfinity</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>irisinfinity</name>
+  <description>irisinfinity</description>
+  <packaging>pom</packaging>
+
+  <modules>
+    <module>platform-bom</module>
+    <module>platform-common</module>
+    <module>registry-service</module>
+    <module>gateway-service</module>
+    <module>auth-service</module>
+    <module>users-service</module>
+    <module>events-service</module>
+  </modules>
+  
+</project>

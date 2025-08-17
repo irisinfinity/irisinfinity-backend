@@ -51,4 +51,7 @@ public class User {
 
     @Column(nullable = false)
     LocalDateTime createdAt = LocalDateTime.now();
+
+    @Column(nullable = false)
+    Boolean enabled = true;
 }

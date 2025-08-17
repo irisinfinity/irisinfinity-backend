@@ -25,21 +25,22 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleNotFoundException(NotFoundException ex, HttpServletRequest request) {
+    public ErrorResponse handleNotFoundException(final NotFoundException ex,
+        final HttpServletRequest request) {
         return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage(), request.getRequestURI());
     }
 
     @ExceptionHandler(AlreadyExistsException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleAlreadyExistsException(AlreadyExistsException ex,
-        HttpServletRequest request) {
+    public ErrorResponse handleAlreadyExistsException(final AlreadyExistsException ex,
+        final HttpServletRequest request) {
         return buildErrorResponse(HttpStatus.CONFLICT, ex.getMessage(), request.getRequestURI());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleValidationExceptions(MethodArgumentNotValidException ex,
-        HttpServletRequest request) {
+    public ErrorResponse handleValidationExceptions(final MethodArgumentNotValidException ex,
+        final HttpServletRequest request) {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getFieldErrors()
             .forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
@@ -50,8 +51,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleTypeMismatch(MethodArgumentTypeMismatchException ex,
-        HttpServletRequest request) {
+    public ErrorResponse handleTypeMismatch(final MethodArgumentTypeMismatchException ex,
+        final HttpServletRequest request) {
         String error = String.format("Invalid value '%s' for parameter '%s'. Expected type: %s",
             ex.getValue(),
             ex.getName(),
@@ -62,8 +63,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleInvalidEnum(HttpMessageNotReadableException ex,
-        HttpServletRequest request) {
+    public ErrorResponse handleInvalidEnum(final HttpMessageNotReadableException ex,
+        final HttpServletRequest request) {
         String message = "Invalid request";
 
         if (ex.getCause() instanceof InvalidFormatException invalidFormatException) {
@@ -84,15 +85,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse handleOtherExceptions(Exception ex, HttpServletRequest request) {
-        // log.error(ex.getMessage(), ex.getCause());
-        
+    public ErrorResponse handleOtherExceptions(final Exception ex,
+        final HttpServletRequest request) {
+        log.error(ex.getMessage(), ex.getCause());
+
         return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred",
             request.getRequestURI());
     }
 
-    private ErrorResponse buildErrorResponse(HttpStatus status,
-        Object error, String path) {
+    private ErrorResponse buildErrorResponse(final HttpStatus status,
+        final Object error, String path) {
         return new ErrorResponse(
             Instant.now(),
             status,

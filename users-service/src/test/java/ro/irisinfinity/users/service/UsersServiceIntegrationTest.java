@@ -12,31 +12,31 @@ import org.springframework.transaction.annotation.Transactional;
 import ro.irisinfinity.platform.common.dto.user.UserRequestDto;
 import ro.irisinfinity.platform.common.dto.user.UserResponseDto;
 import ro.irisinfinity.platform.common.enums.Sex;
-import ro.irisinfinity.users.repository.UserRepository;
+import ro.irisinfinity.users.repository.UsersRepository;
 
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-class UserServiceIntegrationTest {
+class UsersServiceIntegrationTest {
 
     @Autowired
-    private UserService userService;
+    private UsersService usersService;
 
     @Autowired
-    private UserRepository userRepository;
+    private UsersRepository usersRepository;
 
     @Test
-    void createAndGetUser_shouldWork() {
+    void createAndGetUser_ByExternalId_shouldWork() {
         UserRequestDto userCreateDto = new UserRequestDto(
             "integration@example.com", "Password123!", "Int", "Test",
             LocalDate.of(1990, 1, 1), Sex.FEMALE
         );
 
-        UserResponseDto createdUser = userService.createUser(userCreateDto);
+        UserResponseDto createdUser = usersService.createUser(userCreateDto);
         var externalId = createdUser.externalId();
         assertEquals(userCreateDto.email(), createdUser.email());
 
-        UserResponseDto fetchedUser = userService.getUser(externalId);
+        UserResponseDto fetchedUser = usersService.getUserByExternalId(externalId);
         assertEquals(userCreateDto.email(), fetchedUser.email());
     }
 
@@ -47,15 +47,15 @@ class UserServiceIntegrationTest {
             LocalDate.of(1995, 5, 5), Sex.MALE
         );
 
-        userService.createUser(userCreateDto);
+        usersService.createUser(userCreateDto);
 
         UserRequestDto userUpdateDto = new UserRequestDto(
             "update@example.com", "NewPass!", "Updated", "Name",
             LocalDate.of(1995, 5, 5), Sex.MALE
         );
 
-        UserResponseDto updatedUser = userService.updateUser(
-            userRepository.findAll().getFirst().getExternalId(), userUpdateDto);
+        UserResponseDto updatedUser = usersService.updateUser(
+            usersRepository.findAll().getFirst().getExternalId(), userUpdateDto);
         assertEquals("Updated", updatedUser.firstName());
     }
 
@@ -66,10 +66,10 @@ class UserServiceIntegrationTest {
             LocalDate.of(2000, 1, 1), Sex.FEMALE
         );
 
-        var externalId = userService.createUser(userCreateDto).externalId();
+        var externalId = usersService.createUser(userCreateDto).externalId();
 
-        userService.deleteUser(externalId);
+        usersService.deleteUser(externalId);
 
-        assertTrue(userRepository.findUserByExternalId(externalId).isEmpty());
+        assertTrue(usersRepository.findUserByExternalId(externalId).isEmpty());
     }
 }
