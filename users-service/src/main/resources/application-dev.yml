@@ -13,9 +13,26 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
 server:
+  port: 8082
   tomcat:
     basedir: .logs/${spring.application.name}
     accesslog:
       enabled: true
       directory: .
       pattern: '%h %l %u %t "%r" %s %b %D'
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    hostname: localhost
+    ip-address: 127.0.0.1
+    instance-id: ${spring.application.name}:${server.port}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always # when_authorized
