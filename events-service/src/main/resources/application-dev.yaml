@@ -1,15 +1,15 @@
+server:
+  port: 8083
+
 spring:
   application:
     name: events-service
 
-server:
-  port: 8083
-  tomcat:
-    basedir: .logs/${spring.application.name}
-    accesslog:
-      enabled: true
-      directory: .
-      pattern: '%h %l %u %t "%r" %s %b %D'
+security:
+  jwt:
+    issuer: auth-service
+    audience: irisinfinity
+    secret: ${JWT_SECRET:dev-access-secret-at-least-32-chars-123456}
 
 eureka:
   instance:

@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,6 +23,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import ro.irisinfinity.platform.common.dto.user.UserRequestDto;
 import ro.irisinfinity.platform.common.dto.user.UserResponseDto;
+import ro.irisinfinity.platform.common.enums.Role;
 import ro.irisinfinity.platform.common.enums.Sex;
 import ro.irisinfinity.users.entity.User;
 import ro.irisinfinity.users.exception.UserAlreadyExistsException;
@@ -57,6 +59,7 @@ class UsersServiceUnitTest {
         var userSex = Sex.MALE;
         var userCreatedAt = LocalDateTime.now();
         var userEnabled = true;
+        var userRoles = Set.of(Role.USER);
 
         user = new User();
         user.setId(userId);
@@ -68,6 +71,7 @@ class UsersServiceUnitTest {
         user.setBirthDate(userBirthDate);
         user.setSex(userSex);
         user.setCreatedAt(userCreatedAt);
+        user.setRoles(userRoles);
 
         userRequestDto = new UserRequestDto(
             userEmail,
@@ -86,7 +90,8 @@ class UsersServiceUnitTest {
             userBirthDate,
             userSex,
             userCreatedAt,
-            userEnabled
+            userEnabled,
+            userRoles
         );
     }
 

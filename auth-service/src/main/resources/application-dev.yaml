@@ -1,3 +1,6 @@
+server:
+  port: 8081
+
 spring:
   application:
     name: auth-service
@@ -14,15 +17,6 @@ spring:
           enabled: true
         response:
           enabled: true
-          
-server:
-  port: 8081
-  tomcat:
-    basedir: .logs/${spring.application.name}
-    accesslog:
-      enabled: true
-      directory: .
-      pattern: '%h %l %u %t "%r" %s %b %D'
 
 eureka:
   instance:

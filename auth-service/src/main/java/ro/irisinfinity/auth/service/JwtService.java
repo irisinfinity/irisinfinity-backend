@@ -10,10 +10,12 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import ro.irisinfinity.platform.common.enums.Role;
 
 @Service
 public class JwtService {
@@ -54,18 +56,19 @@ public class JwtService {
         }
     }
 
-    public String createAccessToken(String userId, String subjectEmail) {
-        Instant now = Instant.now();
-        return Jwts.builder()
+    public String createAccessToken(String userId, String subjectEmail,
+        Set<Role> roles) {
+        var now = java.time.Instant.now();
+        return io.jsonwebtoken.Jwts.builder()
             .header().type("JWT").and()
             .issuer(issuer)
             .audience().add(audience).and()
             .subject(subjectEmail)
-            .id(UUID.randomUUID().toString())
-            .issuedAt(Date.from(now))
-            .expiration(Date.from(now.plus(accessTtl)))
-            .claims(Map.of("userId", userId))
-            .signWith(accessKey, Jwts.SIG.HS256)
+            .id(java.util.UUID.randomUUID().toString())
+            .issuedAt(java.util.Date.from(now))
+            .expiration(java.util.Date.from(now.plus(accessTtl)))
+            .claims(java.util.Map.of("userId", userId, "roles", roles))
+            .signWith(accessKey, io.jsonwebtoken.Jwts.SIG.HS256)
             .compact();
     }
 

@@ -1,3 +1,6 @@
+server:
+  port: 8080
+
 spring:
   application:
     name: gateway-service
@@ -9,7 +12,6 @@ spring:
         webflux:
           default-filters:
             - AddResponseHeader=X-Powered-By, IrisInfinity Gateway Service
-            - PrefixPath=/api/v1
           httpclient:
             connect-timeout: 3000
             response-timeout: 10s
@@ -24,12 +26,19 @@ spring:
             - id: users-service
               uri: lb://users-service
               predicates: [ Path=/users/** ]
+              filters:
+                - PrefixPath=/api/v1
             - id: events-service
               uri: lb://events-service
               predicates: [ Path=/events/** ]
+              filters:
+                - PrefixPath=/api/v1
 
-server:
-  port: 8080
+security:
+  jwt:
+    issuer: auth-service
+    audience: irisinfinity
+    secret: ${JWT_SECRET:dev-access-secret-at-least-32-chars-123456}
 
 eureka:
   instance:

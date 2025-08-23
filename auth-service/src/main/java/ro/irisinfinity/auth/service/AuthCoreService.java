@@ -8,6 +8,7 @@ import static ro.irisinfinity.platform.common.constants.CommonMessages.USER_ID_M
 import feign.FeignException;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -19,6 +20,7 @@ import ro.irisinfinity.platform.common.dto.auth.EmailLookupRequestDto;
 import ro.irisinfinity.platform.common.dto.auth.TokenResponse;
 import ro.irisinfinity.platform.common.dto.user.UserRequestDto;
 import ro.irisinfinity.platform.common.dto.user.UserResponseDto;
+import ro.irisinfinity.platform.common.enums.Role;
 
 @Service
 @RequiredArgsConstructor
@@ -49,7 +51,7 @@ public class AuthCoreService {
         }
 
         final String userId = requireUserId(credentials.externalId());
-        return generateTokens(userId, credentials.email());
+        return generateTokens(userId, credentials.email(), credentials.roles());
     }
 
     public TokenResponse refresh(String refreshToken) {
@@ -66,8 +68,11 @@ public class AuthCoreService {
         if (userId == null || email == null) {
             throw new ResponseStatusException(BAD_REQUEST, INVALID_REFRESH_TOKEN_PAYLOAD);
         }
-
-        final String accessToken = jwtService.createAccessToken(userId, email);
+        var creds = usersClient.findCredentials(new EmailLookupRequestDto(email));
+        if (creds == null || Boolean.FALSE.equals(creds.enabled())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, BAD_CREDENTIALS);
+        }
+        final String accessToken = jwtService.createAccessToken(userId, email, creds.roles());
         return new TokenResponse(accessToken, ACCESS_TTL_SECONDS, refreshToken);
     }
 
@@ -83,12 +88,12 @@ public class AuthCoreService {
         }
 
         final String userId = requireUserId(registeredUser.externalId());
-        
-        return generateTokens(userId, registeredUser.email());
+
+        return generateTokens(userId, registeredUser.email(), registeredUser.roles());
     }
 
-    private TokenResponse generateTokens(String userId, String email) {
-        final String accessToken = jwtService.createAccessToken(userId, email);
+    private TokenResponse generateTokens(String userId, String email, Set<Role> roles) {
+        final String accessToken = jwtService.createAccessToken(userId, email, roles);
         final String refreshToken = jwtService.createRefreshToken(userId, email);
         return new TokenResponse(accessToken, ACCESS_TTL_SECONDS, refreshToken);
     }

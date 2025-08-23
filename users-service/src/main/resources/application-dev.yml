@@ -1,8 +1,11 @@
+server:
+  port: 8082
+
 spring:
   application:
     name: users-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/user_db
+    url: jdbc:postgresql://localhost:5432/users_db
     username: admin
     password: admin
   jpa:
@@ -12,14 +15,11 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
-server:
-  port: 8082
-  tomcat:
-    basedir: .logs/${spring.application.name}
-    accesslog:
-      enabled: true
-      directory: .
-      pattern: '%h %l %u %t "%r" %s %b %D'
+security:
+  jwt:
+    issuer: auth-service
+    audience: irisinfinity
+    secret: ${JWT_SECRET:dev-access-secret-at-least-32-chars-123456}
 
 eureka:
   instance:
@@ -35,4 +35,4 @@ management:
         include: health,info,metrics,prometheus
   endpoint:
     health:
-      show-details: always # when_authorized
+      show-details: always

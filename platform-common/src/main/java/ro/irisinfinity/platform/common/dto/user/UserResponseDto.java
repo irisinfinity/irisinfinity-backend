@@ -2,7 +2,9 @@ package ro.irisinfinity.platform.common.dto.user;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
+import ro.irisinfinity.platform.common.enums.Role;
 import ro.irisinfinity.platform.common.enums.Sex;
 
 public record UserResponseDto(
@@ -13,7 +15,8 @@ public record UserResponseDto(
     LocalDate birthDate,
     Sex sex,
     LocalDateTime createdAt,
-    Boolean enabled
+    Boolean enabled,
+    Set<Role> roles
 ) {
 
 }
