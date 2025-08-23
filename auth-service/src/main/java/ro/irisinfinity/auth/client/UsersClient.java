@@ -8,13 +8,13 @@ import ro.irisinfinity.platform.common.dto.auth.EmailLookupRequestDto;
 import ro.irisinfinity.platform.common.dto.user.UserRequestDto;
 import ro.irisinfinity.platform.common.dto.user.UserResponseDto;
 
-@FeignClient("users-service")
+@FeignClient(name = "users-service")
 public interface UsersClient {
 
     @PostMapping("/api/v1/users")
-    UserResponseDto createUser(@RequestBody final UserRequestDto createUserRequestDto);
+    UserResponseDto createUser(@RequestBody UserRequestDto userRequestDto);
 
     @PostMapping("/api/v1/internal/users/credentials")
     CredentialsResponseDto findCredentials(
-        @RequestBody final EmailLookupRequestDto emailLookupRequestDto);
+        @RequestBody EmailLookupRequestDto emailLookupRequestDto);
 }

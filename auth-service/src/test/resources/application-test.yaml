@@ -7,3 +7,12 @@ eureka:
     enabled: false
     register-with-eureka: false
     fetch-registry: false
+
+security:
+  jwt:
+    issuer: "auth-service"
+    audience: "irisinfinity"
+    access-ttl-minutes: 15
+    refresh-ttl-days: 7
+    secret: ${JWT_SECRET:dev-access-secret-at-least-32-chars-123456}
+    refresh-secret: ${JWT_REFRESH_SECRET:dev-refresh-secret-at-least-32-chars-123456}
