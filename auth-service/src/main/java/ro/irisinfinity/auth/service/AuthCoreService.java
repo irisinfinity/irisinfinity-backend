@@ -5,10 +5,9 @@ import static ro.irisinfinity.platform.common.constants.CommonMessages.BAD_CREDE
 import static ro.irisinfinity.platform.common.constants.CommonMessages.INVALID_REFRESH_TOKEN_PAYLOAD;
 import static ro.irisinfinity.platform.common.constants.CommonMessages.USER_ID_MISSING;
 
-import feign.FeignException;
-import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -33,13 +32,21 @@ public class AuthCoreService {
     private final JwtService jwtService;
     private final BCryptPasswordEncoder passwordEncoder;
 
-    public TokenResponse login(String email, String rawPassword) {
+    public UserResponseDto register(final UserRequestDto userRequestDto) {
+        final String encodedPassword = passwordEncoder.encode(userRequestDto.password());
+        final UserRequestDto sanitizedUser = userRequestDto.withPassword(encodedPassword);
+
+        final UserResponseDto registeredUser;
+
+        registeredUser = usersClient.createUser(sanitizedUser);
+
+        return registeredUser;
+    }
+
+    public TokenResponse login(final String email, final String rawPassword) {
         final CredentialsResponseDto credentials;
-        try {
-            credentials = usersClient.findCredentials(new EmailLookupRequestDto(email));
-        } catch (FeignException e) {
-            throw propagateFeign(e);
-        }
+
+        credentials = usersClient.findCredentials(new EmailLookupRequestDto(email));
 
         if (credentials == null || Boolean.FALSE.equals(credentials.enabled())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, BAD_CREDENTIALS);
@@ -50,11 +57,12 @@ public class AuthCoreService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, BAD_CREDENTIALS);
         }
 
-        final String userId = requireUserId(credentials.externalId());
+        final UUID userId = requireUserId(credentials.externalId());
+        
         return generateTokens(userId, credentials.email(), credentials.roles());
     }
 
-    public TokenResponse refresh(String refreshToken) {
+    public TokenResponse refresh(final String refreshToken) {
         final var parsed = jwtService.parseRefreshToken(refreshToken);
         final var claims = parsed.getPayload();
 
@@ -63,78 +71,40 @@ public class AuthCoreService {
             throw new ResponseStatusException(BAD_REQUEST, NOT_A_REFRESH_TOKEN);
         }
 
-        final String userId = Objects.toString(claims.get("userId"), null);
-        final String email = claims.getSubject();
-        if (userId == null || email == null) {
+        UUID userId;
+        try {
+            userId = UUID.fromString(Objects.toString(claims.get("userId"), null));
+        } catch (final IllegalArgumentException e) {
             throw new ResponseStatusException(BAD_REQUEST, INVALID_REFRESH_TOKEN_PAYLOAD);
         }
-        var creds = usersClient.findCredentials(new EmailLookupRequestDto(email));
-        if (creds == null || Boolean.FALSE.equals(creds.enabled())) {
+
+        final String email = claims.getSubject();
+        if (email == null) {
+            throw new ResponseStatusException(BAD_REQUEST, INVALID_REFRESH_TOKEN_PAYLOAD);
+        }
+
+        var credentials = usersClient.findCredentials(new EmailLookupRequestDto(email));
+        if (credentials == null || Boolean.FALSE.equals(credentials.enabled())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, BAD_CREDENTIALS);
         }
-        final String accessToken = jwtService.createAccessToken(userId, email, creds.roles());
+        final String accessToken = jwtService.createAccessToken(userId, email, credentials.roles());
+
         return new TokenResponse(accessToken, ACCESS_TTL_SECONDS, refreshToken);
     }
 
-    public TokenResponse register(UserRequestDto userRequestDto) {
-        final String encodedPassword = passwordEncoder.encode(userRequestDto.password());
-        final UserRequestDto sanitizedUser = userRequestDto.withPassword(encodedPassword);
-
-        final UserResponseDto registeredUser;
-        try {
-            registeredUser = usersClient.createUser(sanitizedUser);
-        } catch (FeignException e) {
-            throw propagateFeign(e);
-        }
-
-        final String userId = requireUserId(registeredUser.externalId());
-
-        return generateTokens(userId, registeredUser.email(), registeredUser.roles());
-    }
-
-    private TokenResponse generateTokens(String userId, String email, Set<Role> roles) {
+    private TokenResponse generateTokens(final UUID userId, final String email,
+        final Set<Role> roles) {
         final String accessToken = jwtService.createAccessToken(userId, email, roles);
         final String refreshToken = jwtService.createRefreshToken(userId, email);
+
         return new TokenResponse(accessToken, ACCESS_TTL_SECONDS, refreshToken);
     }
 
-    private String requireUserId(Object externalId) {
+    private UUID requireUserId(final UUID externalId) {
         if (externalId == null) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, USER_ID_MISSING);
         }
-        return externalId.toString();
-    }
 
-    private ResponseStatusException propagateFeign(FeignException ex) {
-        final HttpStatus status = HttpStatus.resolve(ex.status());
-        final String message = extractFeignMessage(ex);
-        return new ResponseStatusException(
-            status != null ? status : HttpStatus.BAD_GATEWAY,
-            message,
-            ex
-        );
-    }
-
-    private String extractFeignMessage(FeignException ex) {
-        try {
-            if (ex.responseBody().isPresent()) {
-                var bytes = ex.responseBody().get();
-                var copy = new byte[bytes.remaining()];
-                bytes.get(copy);
-                String body = new String(copy, StandardCharsets.UTF_8).trim();
-                if (!body.isEmpty()) {
-                    return body;
-                }
-            }
-        } catch (Throwable ignored) {
-        }
-        try {
-            String utf8 = ex.contentUTF8();
-            if (utf8 != null && !utf8.isBlank()) {
-                return utf8.trim();
-            }
-        } catch (Throwable ignored) {
-        }
-        return ex.getMessage();
+        return externalId;
     }
 }

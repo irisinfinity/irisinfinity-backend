@@ -7,6 +7,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import ro.irisinfinity.users.entity.User;
 
 public interface UsersRepository extends JpaRepository<User, Long>,
+
     PagingAndSortingRepository<User, Long> {
 
     Optional<User> findUserByExternalId(final UUID externalId);

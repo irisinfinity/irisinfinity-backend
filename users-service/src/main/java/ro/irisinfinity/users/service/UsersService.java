@@ -3,7 +3,7 @@ package ro.irisinfinity.users.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Optional;
 import java.util.UUID;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,11 +20,11 @@ import ro.irisinfinity.users.repository.UsersRepository;
 
 @Slf4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UsersService {
 
-    private UsersRepository usersRepository;
-    private ObjectMapper objectMapper;
+    private final UsersRepository usersRepository;
+    private final ObjectMapper objectMapper;
 
     public Page<UserResponseDto> getUsers(final int pageNumber, final int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);

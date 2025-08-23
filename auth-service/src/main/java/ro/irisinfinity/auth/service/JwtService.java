@@ -46,7 +46,7 @@ public class JwtService {
         this.refreshTtl = Duration.ofDays(refreshTtlDays);
     }
 
-    private static String base64IfNeeded(String secret) {
+    private static String base64IfNeeded(final String secret) {
         try {
             Decoders.BASE64.decode(secret);
             return secret;
@@ -56,7 +56,7 @@ public class JwtService {
         }
     }
 
-    public String createAccessToken(String userId, String subjectEmail,
+    public String createAccessToken(final UUID userId, final String subjectEmail,
         Set<Role> roles) {
         var now = java.time.Instant.now();
         return io.jsonwebtoken.Jwts.builder()
@@ -72,7 +72,7 @@ public class JwtService {
             .compact();
     }
 
-    public String createRefreshToken(String userId, String subjectEmail) {
+    public String createRefreshToken(final UUID userId, final String subjectEmail) {
         Instant now = Instant.now();
         return Jwts.builder()
             .header().type("JWT").and()
@@ -87,7 +87,7 @@ public class JwtService {
             .compact();
     }
 
-    public Jws<Claims> parseRefreshToken(String token) {
+    public Jws<Claims> parseRefreshToken(final String token) {
         return Jwts.parser()
             .verifyWith(refreshKey)
             .build()

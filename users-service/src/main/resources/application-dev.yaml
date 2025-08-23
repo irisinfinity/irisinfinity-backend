@@ -17,9 +17,12 @@ spring:
 
 security:
   jwt:
-    issuer: auth-service
-    audience: irisinfinity
     secret: ${JWT_SECRET:dev-access-secret-at-least-32-chars-123456}
+  permit:
+    - method: POST
+      patterns:
+        - /api/v1/users
+        - /api/v1/internal/users/credentials
 
 eureka:
   instance:
@@ -29,10 +32,14 @@ eureka:
     instance-id: ${spring.application.name}:${server.port}
 
 management:
+  server:
+    port: 9082
   endpoints:
     web:
       exposure:
         include: health,info,metrics,prometheus
   endpoint:
     health:
+      probes:
+        enabled: true
       show-details: always

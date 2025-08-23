@@ -2,7 +2,7 @@ package ro.irisinfinity.users.controller;
 
 import jakarta.validation.Valid;
 import java.util.UUID;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,7 +22,7 @@ import ro.irisinfinity.users.service.UsersService;
 
 @RestController
 @RequestMapping("/api/v1/users")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UsersController {
 
     private final UsersService usersService;
@@ -46,6 +46,7 @@ public class UsersController {
     }
 
     @PutMapping("/{externalId}")
+    @PreAuthorize("hasRole('ADMIN') or @sec.isSelf(#externalId)")
     public UserResponseDto updateUser(
         @PathVariable("externalId") final UUID externalId,
         @RequestBody @Valid final UserRequestDto userRequestDto
@@ -53,9 +54,9 @@ public class UsersController {
         return usersService.updateUser(externalId, userRequestDto);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{externalId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ADMIN') or @sec.isSelf(#externalId)")
     public void deleteUser(@PathVariable("externalId") final UUID externalId) {
         usersService.deleteUser(externalId);
     }

@@ -7,9 +7,11 @@ spring:
 
 security:
   jwt:
-    issuer: auth-service
-    audience: irisinfinity
     secret: ${JWT_SECRET:dev-access-secret-at-least-32-chars-123456}
+  permit:
+    - method: GET
+      patterns:
+        - /actuator/health
 
 eureka:
   instance:

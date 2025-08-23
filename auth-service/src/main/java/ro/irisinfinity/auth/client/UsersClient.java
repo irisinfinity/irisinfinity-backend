@@ -12,9 +12,9 @@ import ro.irisinfinity.platform.common.dto.user.UserResponseDto;
 public interface UsersClient {
 
     @PostMapping("/api/v1/users")
-    UserResponseDto createUser(@RequestBody UserRequestDto userRequestDto);
+    UserResponseDto createUser(@RequestBody final UserRequestDto userRequestDto);
 
     @PostMapping("/api/v1/internal/users/credentials")
     CredentialsResponseDto findCredentials(
-        @RequestBody EmailLookupRequestDto emailLookupRequestDto);
+        @RequestBody final EmailLookupRequestDto emailLookupRequestDto);
 }

@@ -1,4 +1,6 @@
 spring:
+  autoconfigure:
+    exclude: ro.irisinfinity.platform.common.config.SecurityAutoConfiguration
   cloud:
     discovery:
       enabled: false

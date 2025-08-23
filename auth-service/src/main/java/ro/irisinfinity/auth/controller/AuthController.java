@@ -15,6 +15,7 @@ import ro.irisinfinity.platform.common.dto.auth.LoginRequest;
 import ro.irisinfinity.platform.common.dto.auth.RefreshRequest;
 import ro.irisinfinity.platform.common.dto.auth.TokenResponse;
 import ro.irisinfinity.platform.common.dto.user.UserRequestDto;
+import ro.irisinfinity.platform.common.dto.user.UserResponseDto;
 
 @RestController
 @RequestMapping("/auth")
@@ -24,7 +25,7 @@ public class AuthController {
     private final AuthCoreService authCoreService;
 
     @PostMapping("/register")
-    public TokenResponse register(@RequestBody @Valid final UserRequestDto userRequestDto) {
+    public UserResponseDto register(@RequestBody @Valid final UserRequestDto userRequestDto) {
         return authCoreService.register(userRequestDto);
     }
 

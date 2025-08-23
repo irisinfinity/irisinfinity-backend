@@ -2,6 +2,13 @@ spring:
   cloud:
     discovery:
       enabled: false
+
+security:
+  jwt:
+    issuer: auth-service
+    audience: irisinfinity
+    secret: ${JWT_SECRET:dev-access-secret-at-least-32-chars-123456}
+
 eureka:
   client:
     enabled: false
