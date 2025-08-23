@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <!-- Boot defaults: nice console pattern -->
+  <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+  <!-- Keep tests quiet & don't push to Loki -->
+  <root level="INFO">
+    <appender-ref ref="CONSOLE"/>
+  </root>
+</configuration>

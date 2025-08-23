@@ -1,0 +1,51 @@
+version: "3.9"
+
+services:
+  loki:
+    image: grafana/loki:2.9.4
+    container_name: loki
+    command: -config.file=/etc/loki/loki.yml
+    restart: unless-stopped
+    ports:
+      - "3100:3100"                    # Loki HTTP API (no UI)
+    volumes:
+      - ./loki/loki.yml:/etc/loki/loki.yml:ro
+      - loki-data:/loki
+    networks: [ monitoring ]
+
+  prometheus:
+    image: prom/prometheus:v2.55.0
+    container_name: prometheus
+    restart: unless-stopped
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prom_data:/prometheus
+    ports:
+      - "9091:9090"                    # Prometheus UI → http://localhost:9091
+    networks: [ monitoring ]
+
+  grafana:
+    image: grafana/grafana:10.4.6
+    container_name: grafana
+    restart: unless-stopped
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    ports:
+      - "3000:3000"                    # Grafana UI → http://localhost:3000
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+    depends_on:
+      - prometheus
+      - loki
+    networks: [ monitoring ]
+
+networks:
+  monitoring:
+    driver: bridge
+
+volumes:
+  loki-data:
+  prom_data:
+  grafana_data:

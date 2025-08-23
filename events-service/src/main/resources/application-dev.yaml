@@ -1,0 +1,43 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: events-service
+  security:
+    user:
+      name: prom
+      password: '{noop}prom123'
+      roles: ACTUATOR
+
+security:
+  jwt:
+    secret: ${JWT_SECRET:dev-access-secret-at-least-32-chars-123456}
+  permit:
+    - method: GET
+      patterns:
+        - /actuator/health
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    hostname: localhost
+    ip-address: 127.0.0.1
+    instance-id: ${spring.application.name}:${server.port}
+
+management:
+  server:
+    port: 9083
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    prometheus:
+      access: unrestricted
+  metrics:
+    tags:
+      application: ${spring.application.name}
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true

@@ -1,0 +1,54 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: users-service
+  security:
+    user:
+      name: prom
+      password: '{noop}prom123'
+      roles: ACTUATOR
+  datasource:
+    url: jdbc:postgresql://localhost:5432/users_db
+    username: admin
+    password: admin
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+security:
+  jwt:
+    secret: ${JWT_SECRET:dev-access-secret-at-least-32-chars-123456}
+  permit:
+    - method: POST
+      patterns:
+        - /api/v1/users
+        - /api/v1/internal/users/credentials
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    hostname: localhost
+    ip-address: 127.0.0.1
+    instance-id: ${spring.application.name}:${server.port}
+
+management:
+  server:
+    port: 9082
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    prometheus:
+      access: unrestricted
+  metrics:
+    tags:
+      application: ${spring.application.name}
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true

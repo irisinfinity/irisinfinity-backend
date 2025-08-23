@@ -1,0 +1,40 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: prometheus
+    static_configs:
+      - targets: [ "localhost:9090" ]
+
+  - job_name: gateway
+    metrics_path: &actuator_path /actuator/prometheus
+    basic_auth: &prom_auth
+      username: prom
+      password: prom123
+    static_configs:
+      - targets: [ "host.docker.internal:9090" ]
+
+  - job_name: auth-service
+    metrics_path: *actuator_path
+    basic_auth: *prom_auth
+    static_configs:
+      - targets: [ "host.docker.internal:9081" ]
+
+  - job_name: users-service
+    metrics_path: *actuator_path
+    basic_auth: *prom_auth
+    static_configs:
+      - targets: [ "host.docker.internal:9082" ]
+
+  - job_name: events-service
+    metrics_path: *actuator_path
+    basic_auth: *prom_auth
+    static_configs:
+      - targets: [ "host.docker.internal:9083" ]
+
+  - job_name: registry-service
+    metrics_path: *actuator_path
+    basic_auth: *prom_auth
+    static_configs:
+      - targets: [ "host.docker.internal:9761" ]
