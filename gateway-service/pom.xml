@@ -53,6 +53,12 @@
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-oauth2-jose</artifactId>
     </dependency>
+    <!-- Logging -->
+    <dependency>
+      <groupId>com.github.loki4j</groupId>
+      <artifactId>loki-logback-appender</artifactId>
+      <version>${loki.logback.appender.version}</version>
+    </dependency>
     <!-- Metrics -->
     <dependency>
       <groupId>io.micrometer</groupId>

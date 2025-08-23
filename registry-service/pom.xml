@@ -33,6 +33,12 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-actuator</artifactId>
     </dependency>
+    <!-- Logging -->
+    <dependency>
+      <groupId>com.github.loki4j</groupId>
+      <artifactId>loki-logback-appender</artifactId>
+      <version>${loki.logback.appender.version}</version>
+    </dependency>
     <!-- Metrics -->
     <dependency>
       <groupId>io.micrometer</groupId>

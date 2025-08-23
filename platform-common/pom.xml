@@ -91,6 +91,12 @@
       <version>${jjwt.version}</version>
       <scope>runtime</scope>
     </dependency>
+    <!-- Logging -->
+    <dependency>
+      <groupId>com.github.loki4j</groupId>
+      <artifactId>loki-logback-appender</artifactId>
+      <version>${loki.logback.appender.version}</version>
+    </dependency>
     <!-- Metrics -->
     <dependency>
       <groupId>io.micrometer</groupId>

@@ -22,6 +22,12 @@
       <artifactId>platform-common</artifactId>
       <version>${irisinfinity.paltform.version}</version>
     </dependency>
+    <!-- Logging -->
+    <dependency>
+      <groupId>com.github.loki4j</groupId>
+      <artifactId>loki-logback-appender</artifactId>
+      <version>${loki.logback.appender.version}</version>
+    </dependency>
     <!-- Testing -->
     <dependency>
       <groupId>org.springframework.boot</groupId>

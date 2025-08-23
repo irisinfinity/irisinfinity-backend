@@ -19,6 +19,14 @@ spring:
           httpclient:
             connect-timeout: 3000
             response-timeout: 10s
+            pool:
+              metrics: true
+          metrics:
+            enabled: true
+            prefix: spring.cloud.gateway
+            tags:
+              app: ${spring.application.name}
+              instance: ${HOSTNAME:local}
           discovery:
             locator:
               enabled: false
@@ -46,7 +54,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info,prometheus
+        include: health,info,prometheus,gateway
   endpoint:
     prometheus:
       access: unrestricted
