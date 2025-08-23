@@ -4,11 +4,32 @@ server:
 spring:
   application:
     name: eureka-server
+  security:
+    user:
+      name: prom
+      password: prom123
 
 eureka:
   client:
     register-with-eureka: false
     fetch-registry: false
+
+management:
+  server:
+    port: 9761
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    prometheus:
+      access: unrestricted
+  metrics:
+    tags:
+      application: ${spring.application.name}
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
 
 logging:
   level:

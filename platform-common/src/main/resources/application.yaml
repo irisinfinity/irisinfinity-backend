@@ -1,0 +1,6 @@
+spring:
+  security:
+    user:
+      name: prom
+      password: prom123
+      roles: ACTUATOR

@@ -3,11 +3,16 @@ package ro.irisinfinity.gateway.config;
 import java.nio.charset.StandardCharsets;
 import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.actuate.autoconfigure.security.reactive.EndpointRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.core.userdetails.MapReactiveUserDetailsService;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
 import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;
@@ -24,16 +29,46 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 public class SecurityConfig {
 
     @Bean
-    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
-        http
+    public MapReactiveUserDetailsService actuatorUsers(
+        @Value("${spring.security.user.name:prom}") String username,
+        @Value("${spring.security.user.password:prom123}") String password) {
+
+        String pwd = password.startsWith("{") ? password : "{noop}" + password;
+        UserDetails user = User.withUsername(username)
+            .password(pwd)
+            .roles("ACTUATOR")
+            .build();
+        return new MapReactiveUserDetailsService(user);
+    }
+
+    // Management port (9090)
+    @Bean
+    @Order(0)
+    public SecurityWebFilterChain actuatorSecurity(ServerHttpSecurity http) {
+        return http
+            .securityMatcher(EndpointRequest.toAnyEndpoint())
             .csrf(ServerHttpSecurity.CsrfSpec::disable)
             .authorizeExchange(ex -> ex
-                .pathMatchers("/auth/**", "/actuator/health").permitAll()
+                .pathMatchers("/actuator/health", "/actuator/info").permitAll()
+                .pathMatchers("/actuator/prometheus").authenticated()  // requires Basic auth
+                .anyExchange().denyAll()
+            )
+            .httpBasic(Customizer.withDefaults())
+            .build();
+    }
+
+    // App port (8080)
+    @Bean
+    @Order(1)
+    public SecurityWebFilterChain appSecurity(ServerHttpSecurity http) {
+        return http
+            .csrf(ServerHttpSecurity.CsrfSpec::disable)
+            .authorizeExchange(ex -> ex
+                .pathMatchers("/auth/**").permitAll()
                 .anyExchange().authenticated()
             )
-            .oauth2ResourceServer(
-                oauth -> oauth.jwt(Customizer.withDefaults()));
-        return http.build();
+            .oauth2ResourceServer(oauth -> oauth.jwt(Customizer.withDefaults()))
+            .build();
     }
 
     @Bean

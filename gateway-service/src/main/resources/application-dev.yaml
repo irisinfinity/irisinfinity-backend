@@ -6,6 +6,10 @@ spring:
     name: gateway-service
   main:
     web-application-type: reactive
+  security:
+    user:
+      name: prom
+      password: '{noop}prom123'
   cloud:
     gateway:
       server:
@@ -34,6 +38,26 @@ spring:
               filters:
                 - PrefixPath=/api/v1
 
+management:
+  server:
+    port: 9080
+  security:
+    enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    prometheus:
+      access: unrestricted
+  metrics:
+    tags:
+      application: ${spring.application.name}
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+        spring.cloud.gateway.requests: true
+
 security:
   jwt:
     issuer: auth-service
@@ -46,9 +70,3 @@ eureka:
     hostname: localhost
     ip-address: 127.0.0.1
     instance-id: ${spring.application.name}:${server.port}
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info,metrics,prometheus,gateway

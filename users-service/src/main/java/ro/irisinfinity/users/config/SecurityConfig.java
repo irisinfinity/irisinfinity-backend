@@ -1,0 +1,8 @@
+package ro.irisinfinity.users.config;
+
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class SecurityConfig {
+
+}

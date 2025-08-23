@@ -4,6 +4,11 @@ server:
 spring:
   application:
     name: events-service
+  security:
+    user:
+      name: prom
+      password: '{noop}prom123'
+      roles: ACTUATOR
 
 security:
   jwt:
@@ -21,10 +26,18 @@ eureka:
     instance-id: ${spring.application.name}:${server.port}
 
 management:
+  server:
+    port: 9083
   endpoints:
     web:
       exposure:
-        include: *
+        include: health,info,prometheus
   endpoint:
-    health:
-      show-details: always # when_authorized
+    prometheus:
+      access: unrestricted
+  metrics:
+    tags:
+      application: ${spring.application.name}
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
