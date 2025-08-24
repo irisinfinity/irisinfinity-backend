@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import ro.irisinfinity.platform.common.dto.user.UserRequestDto;
-import ro.irisinfinity.platform.common.dto.user.UserResponseDto;
+import ro.irisinfinity.platform.common.dto.users.UserRequestDto;
+import ro.irisinfinity.platform.common.dto.users.UserResponseDto;
 import ro.irisinfinity.users.service.UsersService;
 
 @RestController

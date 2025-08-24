@@ -1,0 +1,1 @@
+CREATE DATABASE events_db WITH OWNER = admin;
