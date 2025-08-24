@@ -1,4 +1,4 @@
-package ro.irisinfinity.platform.common.dto.user;
+package ro.irisinfinity.platform.common.dto.users;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

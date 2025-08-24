@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-import ro.irisinfinity.platform.common.dto.user.UserRequestDto;
-import ro.irisinfinity.platform.common.dto.user.UserResponseDto;
+import ro.irisinfinity.platform.common.dto.users.UserRequestDto;
+import ro.irisinfinity.platform.common.dto.users.UserResponseDto;
 import ro.irisinfinity.platform.common.enums.Sex;
 import ro.irisinfinity.users.repository.UsersRepository;
 

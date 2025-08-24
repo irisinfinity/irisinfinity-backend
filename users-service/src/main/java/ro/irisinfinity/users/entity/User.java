@@ -24,9 +24,9 @@ import ro.irisinfinity.platform.common.enums.Role;
 import ro.irisinfinity.platform.common.enums.Sex;
 
 @Entity
-@Table(name = "users")
 @Getter
 @Setter
+@Table(name = "users")
 @NoArgsConstructor
 public class User {
 

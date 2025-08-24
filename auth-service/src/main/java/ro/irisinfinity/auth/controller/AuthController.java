@@ -14,8 +14,8 @@ import ro.irisinfinity.auth.service.AuthCoreService;
 import ro.irisinfinity.platform.common.dto.auth.LoginRequest;
 import ro.irisinfinity.platform.common.dto.auth.RefreshRequest;
 import ro.irisinfinity.platform.common.dto.auth.TokenResponse;
-import ro.irisinfinity.platform.common.dto.user.UserRequestDto;
-import ro.irisinfinity.platform.common.dto.user.UserResponseDto;
+import ro.irisinfinity.platform.common.dto.users.UserRequestDto;
+import ro.irisinfinity.platform.common.dto.users.UserResponseDto;
 
 @RestController
 @RequestMapping("/auth")
