@@ -2,8 +2,11 @@ spring:
   autoconfigure:
     exclude: ro.irisinfinity.platform.common.config.SecurityAutoConfiguration
   cloud:
+    config:
+      enabled: false
     discovery:
       enabled: false
+
 eureka:
   client:
     enabled: false

@@ -1,9 +1,7 @@
 spring:
   autoconfigure:
-    exclude: ro.irisinfinity.platform.common.config.SecurityAutoConfiguration
+    exclude: org.springframework.cloud.config.server.config.ConfigServerAutoConfiguration
   cloud:
-    config:
-      enabled: false
     discovery:
       enabled: false
 
