@@ -7,13 +7,13 @@ scrape_configs:
     static_configs:
       - targets: [ "localhost:9090" ]
 
-  - job_name: gateway
+  - job_name: gateway-service
     metrics_path: &actuator_path /actuator/prometheus
     basic_auth: &prom_auth
       username: prom
       password: prom123
     static_configs:
-      - targets: [ "host.docker.internal:9090" ]
+      - targets: [ "host.docker.internal:9080" ]
 
   - job_name: auth-service
     metrics_path: *actuator_path

@@ -2,12 +2,14 @@ package ro.irisinfinity.auth;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
 
 @SpringBootApplication(
     scanBasePackages = {"ro.irisinfinity.auth", "ro.irisinfinity.platform.common"}
 )
+@ConfigurationPropertiesScan
 @EnableFeignClients(basePackages = "ro.irisinfinity.auth.client")
 public class AuthApplication {
 
